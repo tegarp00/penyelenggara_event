@@ -1,0 +1,8 @@
+{
+    "appName": "EventApp",
+
+    "server": {
+        "PORT": 9090,
+        "DB_URL": "postgres://root:secret@localhost:5432/event"
+    }
+}

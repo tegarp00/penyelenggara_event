@@ -1,37 +1,34 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"os"
- pgx "github.com/jackc/pgx/v5"
-
+  "github.com/spf13/viper"
+  "gorm.io/driver/postgres"
+  "gorm.io/gorm"
+  "log"
 )
 
 
 
 func main()  {
 
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-	}
-  fmt.Println("db Connect")
-	defer conn.Close(context.Background())
+
+    viper.SetConfigType("json")
+    viper.AddConfigPath(".")
+    viper.SetConfigName("app.config")
+
+    err := viper.ReadInConfig()
+    if err != nil {
+      fmt.Println("Config not reading")
+    }
+
+    dsn := viper.GetString("server.DB_URL")
+    _, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+    if err != nil {
+      log.Fatal(err.Error())
+    }
+    fmt.Println("db Connected!")
 
 
-
-  var username string
-  var password string
-
-
-	err = conn.QueryRow(context.Background(), "select username, password from asalcoba where id=$1", 1).Scan(&username, &password)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(username, password)
 
 }

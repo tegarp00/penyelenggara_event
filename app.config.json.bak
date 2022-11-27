@@ -1,0 +1,8 @@
+{
+    "appName": "appName",
+
+    "server": {
+        "PORT": 9090,
+        "DB_URL": "postgres://username:password@localhost:5432/dbname"
+    }
+}
